@@ -29,7 +29,8 @@ class ContestoTestCase(unittest.TestCase):
     def __init__(self, test_name='runTest'):
         super(ContestoTestCase, self).__init__(test_name)
         self._handlers = {
-            'on_test_error': []
+            'on_test_error': [],
+            'on_session_closed': []
         }
         self._meta_info = {
             'name': str(self._testMethodName),
@@ -188,6 +189,8 @@ class ContestoTestCase(unittest.TestCase):
             cls.driver.quit()
         except URLError:
             raise ConnectionError('%s:%s' % (cls.driver_settings["host"], cls.driver_settings["port"]))
+        finally:
+            cls._run_handlers('on_session_closed')
 
     @classmethod
     def setUpClass(cls):
